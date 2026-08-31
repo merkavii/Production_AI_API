@@ -1,0 +1,94 @@
+{
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "better-comments.tags": [
+      {
+        "tag": "!",
+        "color": "#FF3B30",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+      {
+        "tag": "?",
+        "color": "#30D158",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+      {
+        "tag": "//",
+        "color": "#8E8E93",
+        "strikethrough": true,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": false,
+        "italic": true
+      },
+      {
+        "tag": "todo",
+        "color": "#FF9F0A",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+      {
+        "tag": "*",
+        "color": "#BF5AF2",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+      {
+        "tag": "@",
+        "color": "#FF5000",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+      {
+        "tag": "fix",
+        "color": "#FF375F",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+      {
+        "tag": "^",
+        "color": "#64D2FF",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+      {
+        "tag": "|",
+        "color": "#FFD60A",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": true,
+        "italic": false
+      },
+    ],
+  
+    "editor.fontFamily": "'JetBrainsMono Nerd Font', Consolas, monospace",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 16,
+    "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.fontSize": 14,
+
+
+}
