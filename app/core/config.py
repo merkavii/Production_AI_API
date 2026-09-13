@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     ]
     
     api_key : str
+    
+    database_password : str
 
     model_config = SettingsConfigDict(
         env_file=".env"

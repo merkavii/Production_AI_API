@@ -1,6 +1,6 @@
 # ? Schema مسئول شکل داده است
-
-from pydantic import BaseModel
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict
 
 class NumPred(BaseModel):
     num: float
@@ -10,3 +10,33 @@ class NumPred(BaseModel):
 class PredictionResponse(BaseModel):
     number: float 
     predict: float
+    
+    
+    
+class TablePredictionResponse(BaseModel): # @ خروجی به کاربر:
+    id: int
+    input_text: str
+    prediction: str
+    confidence: float | None
+    model_name: str
+    created_at: datetime
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )# | Pydantic اجازه دارد داده را از attributeهای یک Object بخواند.
+    
+    
+class PredictionCreate(BaseModel): # @ ورودی از کاربر:
+    input_text: str
+    prediction: str
+    confidence: float | None = None
+    model_name: str
+    
+    
+    
+    
+class PredictionUpdate(BaseModel):
+
+    prediction: str | None = None
+    confidence: float | None = None
+    model_name: str | None = None

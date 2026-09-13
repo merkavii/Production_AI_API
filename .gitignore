@@ -5,7 +5,5 @@ uploads/
 prev_main.py
 sql_codes.sql
 test_db_connection.py
-test_session.py
-test_orm_select.py
-test_orm_insert.py
+
 .venv

@@ -1,7 +1,11 @@
-
-from fastapi import APIRouter,HTTPException
-from app.schemas.prediction import NumPred,PredictionResponse
-from app.services.prediction import make_prediction
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy import select
+from app.database import get_db
+from app.models import Prediction
+from app.schemas.prediction import NumPred,PredictionResponse,PredictionCreate, TablePredictionResponse, PredictionUpdate
+from app.services.prediction import make_prediction, PredictionService
+from app.repositories.prediction import PredictionRepository
 router = APIRouter()
 
 
@@ -23,3 +27,46 @@ def predict(number: NumPred):
             status_code=400,
             detail="Cannot predict zero"
         )
+        
+        
+@router.get("/predictions",
+            response_model= list[TablePredictionResponse])
+def get_predictions(
+    db: Session = Depends(get_db)
+):
+    service = PredictionService(db)
+    predictions = service.get_predictions()
+    return predictions
+
+
+
+
+@router.post(
+    "/predictions",
+    response_model=TablePredictionResponse
+)
+def create_prediction(
+    data: PredictionCreate,
+    db: Session = Depends(get_db)
+):
+    service = PredictionService(db)
+    return service.create_prediction(data)
+
+
+
+@router.patch(
+    "/predictions/{prediction_id}",
+    response_model=TablePredictionResponse
+)
+def update_prediction(
+    prediction_id: int,
+    data: PredictionUpdate,
+    db: Session = Depends(get_db)
+):
+
+    service = PredictionService(db)
+
+    return service.update_prediction(
+        prediction_id,
+        data
+    )
