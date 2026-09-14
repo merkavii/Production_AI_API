@@ -70,3 +70,22 @@ def update_prediction(
         prediction_id,
         data
     )
+    
+    
+@router.delete(
+    "/predictions/{prediction_id}"
+)
+def delete_prediction(
+    prediction_id: int,
+    db: Session = Depends(get_db)
+):
+
+    service = PredictionService(db)
+
+    service.delete_prediction(
+        prediction_id
+    )
+
+    return {
+        "message": "Prediction deleted"
+    }

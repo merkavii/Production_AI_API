@@ -2,7 +2,7 @@
 from app.repositories.prediction import PredictionRepository
 from sqlalchemy.orm import Session
 from app.models import Prediction
-
+from app.core.exceptions import PredictionNotFound
 
 def make_prediction(number: float):
     if number == 0:
@@ -63,5 +63,21 @@ class PredictionService:
         )
         
     
+    def delete_prediction(
+        self,
+        prediction_id: int
+    ):
 
-    
+        prediction = self.repository.get_by_id(
+            prediction_id
+        )
+
+        if prediction is None:
+            raise PredictionNotFound()
+        
+        self.repository.delete(prediction)
+
+        return True
+        
+
+

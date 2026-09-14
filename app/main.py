@@ -1,5 +1,7 @@
 from fastapi import FastAPI,HTTPException,Depends,BackgroundTasks,UploadFile,Request
+from fastapi.responses import JSONResponse
 import time, uuid
+from app.core.exceptions import PredictionNotFound
 from app.services.file import save_upload_file
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -40,6 +42,20 @@ app.add_middleware(
     allow_methods=["*"], # * allow_methods --→ چه HTTP methodهایی؟  : GET POST PUT DELETE PATCH --> allow_methods=["GET", "POST"]
     allow_headers=["*"], # * allow_headers --→ چه Headerهایی؟ : HTTP Request می‌تواند Header داشته باشد. : Authorization,Content-Type,X-Request-ID ...
 )
+
+@app.exception_handler(PredictionNotFound)
+async def prediction_not_found_handler(
+    request: Request, # ^ اطلاعات Request که باعث اجرای Exception شد. شامل چیزهایی مثل: URL , HTTP Method (GET, POST, DELETE, ...) , Headers , ...
+    exc: PredictionNotFound # ^ خود Exception که اتفاق افتاده را دریافت می‌کند.
+):
+
+    return JSONResponse(
+        status_code=404,
+        content={
+            "detail": "Prediction not found"
+        }
+    )
+
 
 
 def get_model():

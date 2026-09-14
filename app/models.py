@@ -47,6 +47,10 @@ class Prediction(Base): # ? یعنی این کلاس یک ORM Model است.هم�
         server_default=func.now(),
         nullable=False,
     )
+    
+    processing_time: Mapped[float | None] = mapped_column(
+            nullable=True
+        )
 
     __table_args__ = (
         CheckConstraint(
