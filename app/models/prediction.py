@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import BigInteger, CheckConstraint, Numeric, Text, func
-from sqlalchemy.orm import Mapped, mapped_column
+
+from sqlalchemy import BigInteger, CheckConstraint, Numeric, DateTime, Text, func, ForeignKey, Identity
+from sqlalchemy.orm import Mapped, mapped_column,relationship
 
 from app.database import Base
 
@@ -17,8 +18,8 @@ class Prediction(Base): # ? یعنی این کلاس یک ORM Model است.هم�
     # * یعنی SQLAlchemy انتظار دارد این Attribute در Python یک int باشد.
     id: Mapped[int] = mapped_column( # | می‌گوید این Attribute به یک Column واقعی در Database وصل است.
         BigInteger,
+        Identity(always=True),
         primary_key=True,
-        autoincrement=True,
     )
     # ^ id: Mapped[int] --> این attribute یک فیلد ORM است و مقدار پایتونی آن int خواهد بود.
     
@@ -44,12 +45,22 @@ class Prediction(Base): # ? یعنی این کلاس یک ORM Model است.هم�
     )
 
     created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         server_default=func.now(),
         nullable=False,
     )
     
     processing_time: Mapped[float | None] = mapped_column(
             nullable=True
+        )
+    
+    user_id : Mapped[int | None] = mapped_column(
+        ForeignKey('users.id'),
+        nullable=True
+    )
+    
+    user: Mapped["User"] = relationship(
+    back_populates="predictions"
         )
 
     __table_args__ = (
@@ -58,3 +69,6 @@ class Prediction(Base): # ? یعنی این کلاس یک ORM Model است.هم�
             name="predictions_confidence_range",
         ),
     )
+    
+    
+    

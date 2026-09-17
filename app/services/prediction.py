@@ -1,7 +1,7 @@
 # service مسئول لاجیک و منطقه
 from app.repositories.prediction import PredictionRepository
 from sqlalchemy.orm import Session
-from app.models import Prediction
+from app.models.prediction import Prediction
 from app.core.exceptions import PredictionNotFound
 
 def make_prediction(number: float):
@@ -16,6 +16,7 @@ class PredictionService:
 
     def __init__(self, db: Session):
         self.repository = PredictionRepository(db)
+        self.db = db
 
 
     def get_predictions(self):
@@ -23,61 +24,65 @@ class PredictionService:
     
     
     def create_prediction(
-        self,
-        input_text: str,
-        prediction: str,
-        confidence: float,
-        model_name: str
+        self,data
     ):
+        with self.db.begin():
 
-        prediction_obj = Prediction(
-            input_text=input_text,
-            prediction=prediction,
-            confidence=confidence,
-            model_name=model_name
-        )
+            prediction_obj = Prediction(
+                input_text=data.input_text,
+                prediction=data.prediction,
+                confidence=data.confidence,
+                model_name=data.model_name,
+                user_id = data.user_id 
+            )
 
-        return self.repository.create(prediction_obj)  
-    
-    
-    
+            prediction = self.repository.create(prediction_obj)
+
+            self.db.refresh(prediction)
+            
+            return prediction
+        
     def update_prediction(
     self,
     prediction_id: int,
     data
     ):
-        prediction = self.repository.get_by_id(
-            prediction_id
-        )
-
-        if prediction is None:
-            raise ValueError(
-                "Prediction not found"
+        with self.db.begin():
+            prediction = self.repository.get_by_id(
+                prediction_id
             )
 
-        return self.repository.update(
-            prediction,
-            data.model_dump(
-                exclude_unset=True
+            if prediction is None:
+                raise PredictionNotFound()
+
+            prediction =  self.repository.update(
+                prediction,
+                data.model_dump(
+                    exclude_unset=True
+                )
             )
-        )
+            self.db.refresh(prediction)
+            
+            return prediction
+
         
     
     def delete_prediction(
         self,
         prediction_id: int
     ):
+        with self.db.begin():
 
-        prediction = self.repository.get_by_id(
-            prediction_id
-        )
+            prediction = self.repository.get_by_id(
+                prediction_id
+            )
 
-        if prediction is None:
-            raise PredictionNotFound()
+            if prediction is None:
+                raise PredictionNotFound()
+            
+            self.repository.delete(prediction)
+
+
+            return True
         
-        self.repository.delete(prediction)
-
-        return True
-        
-
 

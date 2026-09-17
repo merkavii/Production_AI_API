@@ -31,7 +31,7 @@ class PredictionCreate(BaseModel): # @ ورودی از کاربر:
     prediction: str
     confidence: float | None = None
     model_name: str
-    
+    user_id: int | None = None
     
     
     

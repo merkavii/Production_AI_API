@@ -1,7 +1,7 @@
 
 from app.database import SessionLocal
 
-from app.models import Prediction
+from app.models.prediction import Prediction
 
 
 

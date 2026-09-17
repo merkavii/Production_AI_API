@@ -11,7 +11,14 @@ DATABASE_URL = (
 )
 
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    pool_size=5, # $ یعنی ۵ Connection دائماً در Pool نگه داشته می‌شود.
+    max_overflow=10, # $ یعنی اگر آن ۵ تا مشغول بودند، تا ۱۰ Connection اضافه موقت می‌تواند ساخته شود.
+    pool_timeout=30, # $ یعنی اگر همه Connectionها مشغول باشند، Request حداکثر ۳۰ ثانیه صبر می‌کند و بعد خطا می‌دهد
+    pool_recycle=1800, # $ یعنی Connectionهای قدیمی بعد از ۳۰ دقیقه recycle شوند؛ برای محیط‌های Cloud مفید است.
+    pool_pre_ping=True, # $ یعنی قبل از تحویل Connection، SQLAlchemy یک تست سبک می‌زند تا مطمئن شود Connection مرده نیست.
+)
 
 
 SessionLocal = sessionmaker(

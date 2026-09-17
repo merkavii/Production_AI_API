@@ -6,7 +6,7 @@ from app.services.file import save_upload_file
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.core.security import verify_api_key, require_admin
-from app.routers import prediction
+from app.routers import prediction,user
 
 
 # * Lifespan
@@ -31,6 +31,11 @@ app.include_router(
     prediction.router,
     prefix="/prediction", # | توی هرکدوم از اون اندپوینتا بریم قبلش /prediction میزاره
     tags=["Prediction"]
+)
+app.include_router(
+    user.router,
+    prefix="/user",
+    tags=["User"]
 )
 
 # | CORS:

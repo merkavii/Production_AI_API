@@ -9,7 +9,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Prediction
+from app.models.prediction import Prediction
 
 
 class PredictionRepository:
@@ -36,15 +36,14 @@ class PredictionRepository:
 
     def create(self, prediction: Prediction):
         self.db.add(prediction)
-        self.db.commit()
-        self.db.refresh(prediction)
+        self.db.flush() # ? SQL به PostgreSQL ارسال می‌شود ولی Transaction هنوز باز است
 
         return prediction
 
 
     def delete(self, prediction: Prediction):
         self.db.delete(prediction)
-        self.db.commit()
+        self.db.flush()
 
 
 
@@ -57,8 +56,7 @@ class PredictionRepository:
                 value
             )
 
-        self.db.commit()
-        self.db.refresh(prediction)
+        self.db.flush()
 
         return prediction
     
