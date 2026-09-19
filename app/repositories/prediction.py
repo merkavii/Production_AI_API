@@ -61,4 +61,12 @@ class PredictionRepository:
         return prediction
     
 
-
+    def get_paginated(self, page: int, size: int): # $ Pagination یعنی داده رو تکه‌تکه بگیری.
+        statement = (
+            select(Prediction)
+            .order_by(Prediction.id)
+            .offset((page -1) * size)
+            .limit(size)
+            )
+        result = self.db.execute(statement)
+        return result.scalars().all()

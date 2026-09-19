@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.models.user import User
 
@@ -54,6 +54,21 @@ class UserRepository:
 
         return user
     
-        
-        
+    def get_by_id_with_predictions(self, user_id):
+        statement = (
+        select(User)
+        .options(selectinload(User.predictions)) # $ User رو بگیر و Predictionهاش رو هم همون موقع آماده کن. |  Predictionهای مرتبط را هم از قبل load کن
+        .where(User.id == user_id)
+    )
     
+        result = self.db.execute(statement)
+        
+        return result.scalar_one_or_none()
+        
+    def get_all_with_predictions(self,):
+        statement = (
+        select(User)
+        .options(selectinload(User.predictions)) 
+    )
+        result = self.db.execute(statement)
+        return result.scalars().all()
