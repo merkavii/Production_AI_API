@@ -36,7 +36,7 @@ class PredictionCreate(BaseModel): # @ ورودی از کاربر:
     
     
 class PredictionUpdate(BaseModel):
-
+    input_text: str | None = None
     prediction: str | None = None
     confidence: float | None = None
     model_name: str | None = None

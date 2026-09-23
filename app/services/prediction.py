@@ -22,6 +22,13 @@ class PredictionService:
     def get_predictions(self):
         return self.repository.get_all()
     
+    def get_prediction(self, prediction_id):
+        prediction = self.repository.get_by_id(prediction_id)
+        
+        if prediction is None:
+            raise PredictionNotFound()
+        return prediction
+    
     
     def create_prediction(
         self,data

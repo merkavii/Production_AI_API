@@ -40,6 +40,19 @@ def get_predictions(
 
 
 
+@router.get(
+    "/predictions/{prediction_id}",
+    response_model=TablePredictionResponse
+)
+def get_prediction_by_id(
+    prediction_id:int,
+    db: Session = Depends(get_db)
+):
+    service = PredictionService(db)
+    prediction = service.get_prediction(prediction_id)
+    return prediction
+
+
 
 @router.post(
     "/predictions",
