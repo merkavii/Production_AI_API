@@ -5,3 +5,6 @@ class PredictionNotFound(Exception): # * این فقط یک نوع خطای اخ
 
 class UserNotFound(Exception):
     pass
+
+class UserNotFound(Exception):
+    pass

@@ -1,7 +1,7 @@
 from fastapi import FastAPI,HTTPException,Depends,BackgroundTasks,UploadFile,Request
 from fastapi.responses import JSONResponse
 import time, uuid
-from app.core.exceptions import PredictionNotFound
+from app.core.exceptions import PredictionNotFound, UserNotFound
 from app.services.file import save_upload_file
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -60,6 +60,15 @@ async def prediction_not_found_handler(
             "detail": "Prediction not found"
         }
     )
+
+
+@app.exception_handler(UserNotFound)
+async def user_not_found_handler(request: Request, exc: UserNotFound):
+    return JSONResponse(
+        status_code=404,
+        content={"detail": "User not found"}
+    )
+
 
 
 

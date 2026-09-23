@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services.user import UserService
 from app.repositories.user import UserRepository
 
@@ -22,3 +22,30 @@ def get_user(user_id:int,
              db: Session = Depends(get_db)):
     service = UserService(db)
     return service.get_user(user_id)
+
+
+@router.patch("/{user_id}",
+              response_model=UserResponse)
+def update_user(
+    user_id: int,
+    data: UserUpdate,
+    db: Session = Depends(get_db)
+):
+    service = UserService(db)
+
+    return service.update_user(
+        user_id,
+        data
+    )
+    
+    
+@router.delete("/{user_id}")
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    service = UserService(db)
+
+    return service.delete_user(
+        user_id
+    )
