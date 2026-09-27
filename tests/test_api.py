@@ -5,7 +5,7 @@ client = TestClient(app)
 
 
 def test_health_endpoint():
-    response = client.get("/health")
+    response = client.get("/prediction/health")
     res_json = response.json()
     assert response.status_code == 200
     assert res_json['status'] == 'healthy'
@@ -13,7 +13,7 @@ def test_health_endpoint():
 
 def test_predict_endpoint():
     response = client.post(
-        '/predict',
+        '/prediction/predict',
         json={
             'num': 10
         }
@@ -26,13 +26,13 @@ def test_predict_endpoint():
 
 def test_predict_invalid_input():
     response_1 = client.post(
-    '/predict',
+    '/prediction/predict',
     json={
         'num': 'hello'
     }
     )
     response_2 = client.post(
-    '/predict',
+    '/prediction/predict',
     json={}
     )
     assert response_1.status_code == 422 # ! ببینیم ولیدیشن درست انجام میشه یا نه. انتظار ما 200 نیست
@@ -41,7 +41,7 @@ def test_predict_invalid_input():
     
 def test_predict_zero():
     response = client.post(
-    '/predict',
+    '/prediction/predict',
     json={
         'num': 0
     }
@@ -50,11 +50,12 @@ def test_predict_zero():
     
     
 def test_get_model():
-    response = client.get("/model")
+
+    with TestClient(app) as client:
+        response = client.get("/model")
 
     assert response.status_code == 200
     assert response.json()["model"] == "AI MODEL"
-    
  
  
 def fake_get_model():

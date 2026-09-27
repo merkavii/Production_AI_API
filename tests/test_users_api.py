@@ -129,3 +129,9 @@ def test_delete_user(client, db_session):
         user.id
     )
     assert deleted_user is None
+    
+    
+def test_user_fixture(user):
+
+    assert user.name == "Ali"
+    assert user.email == "ali@example.com"

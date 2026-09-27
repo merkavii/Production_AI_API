@@ -1,6 +1,6 @@
 # ? Schema مسئول شکل داده است
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 class NumPred(BaseModel):
     num: float
@@ -29,7 +29,10 @@ class TablePredictionResponse(BaseModel): # @ خروجی به کاربر:
 class PredictionCreate(BaseModel): # @ ورودی از کاربر:
     input_text: str
     prediction: str
-    confidence: float | None = None
+    confidence: float = Field(
+        ge=0,
+        le=1
+    )
     model_name: str
     user_id: int | None = None
     

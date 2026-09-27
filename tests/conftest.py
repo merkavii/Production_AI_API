@@ -5,6 +5,8 @@ from app.core.config import settings
 from fastapi.testclient import TestClient
 from app.main import app
 from app.database import get_db
+from app.models.user import User
+from app.models.prediction import Prediction
 
 test_engine = create_engine(
     settings.test_database_url
@@ -48,3 +50,34 @@ def client(db_session):
         yield test_client
     
     app.dependency_overrides.clear()
+    
+    
+@pytest.fixture
+def user(db_session):
+
+    user = User(
+        name="Ali",
+        email="ali@example.com"
+    )
+
+    db_session.add(user)
+    db_session.flush()
+
+    return user
+
+
+@pytest.fixture
+def prediction(db_session, user):
+
+    prediction = Prediction(
+        input_text="schon!",
+        prediction="positive",
+        confidence=0.79,
+        model_name="sentiment-model-v1",
+        user_id=user.id
+    )
+
+    db_session.add(prediction)
+    db_session.flush()
+
+    return prediction

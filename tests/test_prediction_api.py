@@ -234,3 +234,69 @@ def test_delete_prediction(client, db_session):
         prediction_id
     )
     assert deleted_prediction is None
+    
+    
+def test_create_prediction_invalid_confidence(client):
+
+    response = client.post(
+        "/prediction/predictions",
+        json={
+            "input_text": "bad confidence",
+            "prediction": "negative",
+            "confidence": 2,
+            "model_name": "sentiment-model-v1",
+            "user_id": 1
+        }
+    )
+
+    data = response.json()
+
+    assert response.status_code == 422
+    
+    
+def test_prediction_response_schema(client, db_session):
+    user = User(
+    name="Ali",
+    email="ali@example.com"
+    )
+
+    db_session.add(user)
+    db_session.flush()
+
+    user_id = user.id
+    
+    
+    prediction = Prediction(
+        input_text="schon!",
+        prediction="positive",
+        confidence=0.7912,
+        model_name="sentiment-model-v1",
+        user_id = user_id
+    )
+
+    db_session.add(prediction)
+    db_session.flush()
+
+    prediction_id = prediction.id
+    db_session.commit()
+
+    response = client.get(
+    f"/prediction/predictions/{prediction_id}"
+    )
+    data = response.json()
+    
+    assert response.status_code == 200
+    assert "id" in data
+    assert "input_text" in data
+    assert "prediction" in data
+    assert "confidence" in data
+    assert "model_name" in data
+    assert "something_private" not in data
+    
+    assert isinstance(data["id"], int)
+    assert isinstance(data["input_text"], str)
+    assert isinstance(data["prediction"], str)
+    assert isinstance(data["confidence"], float)
+    assert isinstance(data["model_name"], str)
+    
+    

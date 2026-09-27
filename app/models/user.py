@@ -28,3 +28,8 @@ class User(Base):
     predictions: Mapped[list["Prediction"]] = relationship(
         back_populates="user"
     )
+    
+    password_hash: Mapped[str] = mapped_column(
+        Text,
+        nullable=False
+    )
